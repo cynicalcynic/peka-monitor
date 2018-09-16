@@ -10,6 +10,7 @@
           <input v-model="input" type="text" class="form-control" placeholder="Nazwa przystanku">
         </div>
       </form>
+      <stopPointHistory v-show="input.length == 0"  v-on:showDetails="showStopPointDetails($event)"></stopPointHistory>
       <loadingAnimation v-show="showAnimation && stopPoints.length == 0"></loadingAnimation>
       <ul class="list-group">
         <li v-for="stopPoint in stopPoints" v-on:click="showStopPointDetails(stopPoint.name)" :key="stopPoint.symbol" class="list-group-item stop-point">
@@ -26,6 +27,7 @@
 <script>
 import bollardSelect from './bollardSelect.vue'
 import loadingAnimation from './loadingAnimation.vue'
+import stopPointHistory from './stopPointHistory.vue'
 export default {
   data(){
     return {
@@ -42,6 +44,7 @@ export default {
         this.selectedStopPoint = stopPointName;
         this.showDetails = true;
         this.input = "";
+        this.$store.commit("PUSH_TO_HISTORY", stopPointName);
     },
     hideStopPointDetails(){
       selectedStopPoint = ""
@@ -68,7 +71,7 @@ export default {
       });
     }
   },
-  components : {bollardSelect, loadingAnimation}
+  components : {bollardSelect, loadingAnimation, stopPointHistory}
 
 }
 </script>

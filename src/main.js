@@ -15,7 +15,8 @@ if(document.body.style.zoom !== undefined)
 const store = new Vuex.Store({
   state: {
     selectedBollards : [],
-    sidebarToggled : false
+    sidebarToggled : false,
+    history : []
   },
   mutations: {
     ADD_TAG(state, bollard)
@@ -39,12 +40,28 @@ const store = new Vuex.Store({
     SET_TAGS(state, bollards)
     {
       state.selectedBollards = bollards;
+    },
+    PUSH_TO_HISTORY(state, stopPoint)
+    {
+      console.log(state);
+      if(state.history.indexOf(stopPoint) == -1)
+        state.history.push(stopPoint);
+    },
+    SET_HISTORY(state, history)
+    {
+      state.history = history;
     }
   }
 });
 
 store.subscribe((mutation, state) => {
-  localStorage.setItem('tags', JSON.stringify(state.selectedBollards));
+  console.log(mutation);
+  if(mutation.type === "SET_TAGS" || mutation.type === "ADD_TAG" || mutation.type == "REMOVE_TAG")
+    localStorage.setItem('tags', JSON.stringify(state.selectedBollards));
+  if(mutation.type == "PUSH_TO_HISTORY")
+  {
+    localStorage.setItem('history', JSON.stringify(state.history));
+  }
 });
 
 window.app = new Vue({
@@ -52,8 +69,12 @@ window.app = new Vue({
   render: h => h(App),
   beforeCreate()
   {
-    var tags = JSON.parse(localStorage.getItem("tags"));
-    this.$store.commit("SET_TAGS", tags);
+    let tags = JSON.parse(localStorage.getItem("tags"));
+    if(tags !== null)
+      this.$store.commit("SET_TAGS", tags);
+    let history = JSON.parse(localStorage.getItem("history"));
+    if(history !== null)
+      this.$store.commit('SET_HISTORY', history);
   },
   store
 })
