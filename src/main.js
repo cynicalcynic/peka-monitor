@@ -33,35 +33,30 @@ const store = new Vuex.Store({
         state.selectedBollards.splice(index, 1);
       //localStorage.setItem('tags', JSON.stringify(state.selectedBollards));
     },
-    TOGGLE_SIDEBAR(state)
-    {
+    TOGGLE_SIDEBAR(state){
       state.sidebarToggled = !state.sidebarToggled;
     },
-    SET_TAGS(state, bollards)
-    {
+    SET_TAGS(state, bollards){
       state.selectedBollards = bollards;
     },
-    PUSH_TO_HISTORY(state, stopPoint)
-    {
-      console.log(state);
-      if(state.history.indexOf(stopPoint) == -1)
+    PUSH_TO_HISTORY(state, stopPoint){
+      // if(state.history.indexOf(stopPoint) == -1)
         state.history.push(stopPoint);
     },
-    SET_HISTORY(state, history)
-    {
+    SET_HISTORY(state, history){
       state.history = history;
+    },
+    CLEAR_HISTORY(state){
+      state.history = []
     }
+
   }
 });
 
 store.subscribe((mutation, state) => {
-  console.log(mutation);
-  if(mutation.type === "SET_TAGS" || mutation.type === "ADD_TAG" || mutation.type == "REMOVE_TAG")
     localStorage.setItem('tags', JSON.stringify(state.selectedBollards));
-  if(mutation.type == "PUSH_TO_HISTORY")
-  {
     localStorage.setItem('history', JSON.stringify(state.history));
-  }
+    console.log(mutation);
 });
 
 window.app = new Vue({

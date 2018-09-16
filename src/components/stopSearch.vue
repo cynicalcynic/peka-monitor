@@ -1,6 +1,6 @@
 <template lang="html">
   <div>
-    <template v-if="!showDetails">
+    <template v-if="!selectedStopPoint">
       <form class="form-group" v-on:submit.prevent>
         <label class="text-light">Wyszukaj przystanek:</label>
         <div class="input-group">
@@ -10,16 +10,16 @@
           <input v-model="input" type="text" class="form-control" placeholder="Nazwa przystanku">
         </div>
       </form>
-      <stopPointHistory v-show="input.length == 0"  v-on:showDetails="showStopPointDetails($event)"></stopPointHistory>
+      <stopPointHistory v-show="input.length == 0 && $store.state.history.length"  v-on:showDetails="showStopPointDetails($event)"></stopPointHistory>
       <loadingAnimation v-show="showAnimation && stopPoints.length == 0"></loadingAnimation>
       <ul class="list-group">
-        <li v-for="stopPoint in stopPoints" v-on:click="showStopPointDetails(stopPoint.name)" :key="stopPoint.symbol" class="list-group-item stop-point">
+        <li v-for="stopPoint in stopPoints" v-on:click="showStopPointDetails(stopPoint)" :key="stopPoint.symbol" class="list-group-item stop-point">
           <i class="fas fa-bus text-dark"></i><small>{{stopPoint.symbol}}</small> {{stopPoint.name}}
         </li>
       </ul>
     </template>
     <template v-else>
-      <bollardSelect v-on:closeDetails="showDetails = false" v-bind:stopPointName="selectedStopPoint"></bollardSelect>
+      <bollardSelect v-on:closeDetails="selectedStopPoint=null" v-bind:stopPoint="selectedStopPoint"></bollardSelect>
     </template>
   </div>
 </template>
@@ -33,21 +33,20 @@ export default {
     return {
       input : "",
       stopPoints : [],
-      selectedStopPoint : "",
-      showDetails : false,
+      selectedStopPoint : null,
       showAnimation : false
     };
   },
   methods:
   {
-    showStopPointDetails(stopPointName){
-        this.selectedStopPoint = stopPointName;
+    showStopPointDetails(stopPoint){
+        this.selectedStopPoint = stopPoint;
         this.showDetails = true;
         this.input = "";
-        this.$store.commit("PUSH_TO_HISTORY", stopPointName);
+        this.$store.commit("PUSH_TO_HISTORY", stopPoint);
     },
     hideStopPointDetails(){
-      selectedStopPoint = ""
+      selectedStopPoint = null;
     }
   },
   watch:{

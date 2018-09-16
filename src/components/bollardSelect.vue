@@ -36,8 +36,8 @@ import loadingAnimation from './loadingAnimation.vue'
 
 export default {
   props: {
-    stopPointName : {
-      type : String,
+    stopPoint : {
+      type : Object,
       required : true
     }
   },
@@ -71,7 +71,7 @@ export default {
   },
   created()
   {
-    var query = {method: "getBollardsByStopPoint", p0: `{"name":"${this.stopPointName}"}`};
+    var query = {method: "getBollardsByStopPoint", p0: `{"name":"${this.stopPoint.name}"}`};
     $.ajax("http://pekamonitor.cba.pl/submit.php", {
       method: "POST",
       data: query
