@@ -3,13 +3,11 @@ import App from './App.vue'
 import Vuex from 'vuex'
 import VueResource from 'vue-resource'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import $ from 'jquery'
 
 const MAX_HISTORY_ITEMS = 5;
 
 Vue.use(Vuex);
 Vue.use(VueResource);
-window.$ = $;
 
 if(document.body.style.zoom !== undefined)
   document.body.style.zoom = 1.0;

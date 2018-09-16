@@ -58,14 +58,15 @@ export default {
         return;
       }
       this.showAnimation = true;
-      let query = {method: "getStopPoints", p0: `{"pattern":${this.input}}`};
-      $.ajax("http://pekamonitor.cba.pl/submit.php", {
-        method: "POST",
-        data: query,
-        beforeSend: function(xhr){xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');}
-      }).done((data)=>{
+      let query = {
+        method: "getStopPoints",
+        p0: `{"pattern":"${this.input}"}`
+      };
+      this.$http.post("http://pekamonitor.cba.pl/submit.php", query, {
+        emulateJSON : true
+      }).then((response)=>{
           if(this.input.length > 0)
-            this.stopPoints = data.success;
+            this.stopPoints = response.body.success;
           this.showAnimation = false;
       });
     }

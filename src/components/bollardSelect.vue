@@ -71,12 +71,14 @@ export default {
   },
   created()
   {
-    var query = {method: "getBollardsByStopPoint", p0: `{"name":"${this.stopPoint.name}"}`};
-    $.ajax("http://pekamonitor.cba.pl/submit.php", {
-      method: "POST",
-      data: query
-    }).done((data)=>{
-        this.bollards = data.success.bollards;
+    let query = {
+      method: "getBollardsByStopPoint",
+      p0: `{"name":"${this.stopPoint.name}"}`
+    };
+    this.$http.post("http://pekamonitor.cba.pl/submit.php", query, {
+      emulateJSON : true
+    }).then((response)=>{
+        this.bollards = response.body.success.bollards;
     });
   },
   components : {loadingAnimation}

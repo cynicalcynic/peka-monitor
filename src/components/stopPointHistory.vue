@@ -1,7 +1,7 @@
 <template lang="html">
   <div id="history" class="bg-light">
     <h5 class="border-bottom p-2 m-0">Ostatnio wyszukiwane</h5>
-    <div v-for="stopPoint in history" v-on:click="$emit('showDetails', stopPoint)" class="history-item">
+    <div v-for="stopPoint in history" :key="stopPoint.name" v-on:click="$emit('showDetails', stopPoint)" class="history-item">
       <i class="fas fa-bus text-dark"></i><span>{{stopPoint.name}}</span>
     </div>
     <div>

@@ -59,29 +59,27 @@
     {
       updateTimes()
       {
-        let query = {method: "getTimes", p0: `{"symbol":${this.tag}}`};
-        $.ajax("http://pekamonitor.cba.pl/submit.php", {
-          method: "POST",
-          data: query
-          //beforeSend: function(xhr){xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');}
-        }).then((data)=>{
-            this.times = data.success.times.slice(0,5);
-            this.bollard = data.success.bollard;
+        let query = {
+          method: "getTimes",
+          p0: `{"symbol":"${this.tag}"}`
+        };
+        this.$http.post("http://pekamonitor.cba.pl/submit.php", query, {
+          emulateJSON : true
+        }).then((response)=>{
+            this.times = response.body.success.times.slice(0,5);
+            this.bollard = response.body.success.bollard;
             this.loadingFinished = true;
         });
       },
       findMessages(){
         let query = {
           method: "findMessagesForBollard",
-          p0: `{"symbol":${this.tag}}`
+          p0: `{"symbol":"${this.tag}"}`
         };
-        $.ajax("http://pekamonitor.cba.pl/submit.php", {
-          method: "POST",
-          data: query
-          //beforeSend: function(xhr){xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');}
-        }).then((data)=>{
-              this.message = data.success[0].content;
-
+        this.$http.post("http://pekamonitor.cba.pl/submit.php", query, {
+          emulateJSON : true
+        }).then((response)=>{
+              this.message = response.body.success[0].content;
         });
       },
       removeBollard()
