@@ -5,6 +5,8 @@ import VueResource from 'vue-resource'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import $ from 'jquery'
 
+const MAX_HISTORY_ITEMS = 5;
+
 Vue.use(Vuex);
 Vue.use(VueResource);
 window.$ = $;
@@ -40,8 +42,11 @@ const store = new Vuex.Store({
       state.selectedBollards = bollards;
     },
     PUSH_TO_HISTORY(state, stopPoint){
-      // if(state.history.indexOf(stopPoint) == -1)
-        state.history.push(stopPoint);
+      for(let x of state.history)
+        if(x.name === stopPoint.name) return;
+      if(state.history.length >= MAX_HISTORY_ITEMS)
+        state.history.shift();
+      state.history.push(stopPoint);
     },
     SET_HISTORY(state, history){
       state.history = history;
@@ -55,8 +60,8 @@ const store = new Vuex.Store({
 
 store.subscribe((mutation, state) => {
     localStorage.setItem('tags', JSON.stringify(state.selectedBollards));
-    localStorage.setItem('history', JSON.stringify(state.history));
-    console.log(mutation);
+    if(mutation.type === "SET_HISTORY" || mutation.type === "PUSH_TO_HISTORY")
+      localStorage.setItem('history', JSON.stringify(state.history));
 });
 
 window.app = new Vue({
