@@ -19,10 +19,10 @@
         <tr v-show="!loadingFinished">
           <td colspan="3"><loadingAnimation></loadingAnimation></td>
         </tr>
-        <tr v-for="time in times.slice(0, 5)" v-bind:class="{blink : time.minutes < 1}">
+        <tr v-for="time in times" v-bind:class="{blink : time.minutes < 1}">
           <td>{{time.line}}</td>
           <td>{{time.direction}}</td>
-          <td>{{time.minutes < 1 ? '<1' : time.minutes}}min</td>
+          <td>{{time.onStopPoint?'Odjeżdża!':time.minutes < 1 ? '<1min' : time.minutes + 'min'}}</td>
         </tr>
         <tr v-show="times.length === 0 && loadingFinished">
           <td class="text-center" colspan="3">Brak odjazdów</td>
@@ -65,7 +65,7 @@
           data: query
           //beforeSend: function(xhr){xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');}
         }).then((data)=>{
-            this.times = data.success.times;
+            this.times = data.success.times.slice(0,5);
             this.bollard = data.success.bollard;
             this.loadingFinished = true;
         });
