@@ -4,34 +4,31 @@ import Vuex from 'vuex'
 import VueResource from 'vue-resource'
 import 'bootstrap/dist/css/bootstrap.min.css'
 
+if(document.body.style.zoom !== undefined)
+  document.body.style.zoom = 1.0;
+
 const MAX_HISTORY_ITEMS = 5;
 
 Vue.use(Vuex);
 Vue.use(VueResource);
 
-if(document.body.style.zoom !== undefined)
-  document.body.style.zoom = 1.0;
-
 const store = new Vuex.Store({
   state: {
     selectedBollards : [],
+    history : [],
     sidebarToggled : false,
-    history : []
   },
   mutations: {
     ADD_TAG(state, bollard)
     {
-      if(state.selectedBollards.indexOf(bollard) == -1)
-      {
+      if(state.selectedBollards.indexOf(bollard) == -1){
         state.selectedBollards.push(bollard);
-        //localStorage.setItem('tags', JSON.stringify(state.selectedBollards));
       }
     },
     REMOVE_TAG(state, tag){
       var index = state.selectedBollards.indexOf(tag);
       if(index > -1)
         state.selectedBollards.splice(index, 1);
-      //localStorage.setItem('tags', JSON.stringify(state.selectedBollards));
     },
     TOGGLE_SIDEBAR(state){
       state.sidebarToggled = !state.sidebarToggled;
@@ -50,16 +47,16 @@ const store = new Vuex.Store({
       state.history = history;
     },
     CLEAR_HISTORY(state){
-      state.history = []
+      state.history = [];
     }
-
   }
 });
 
 store.subscribe((mutation, state) => {
+  if(mutation.type === "SET_HISTORY" || mutation.type === "PUSH_TO_HISTORY")
+    localStorage.setItem('history', JSON.stringify(state.history));
+  else
     localStorage.setItem('tags', JSON.stringify(state.selectedBollards));
-    if(mutation.type === "SET_HISTORY" || mutation.type === "PUSH_TO_HISTORY")
-      localStorage.setItem('history', JSON.stringify(state.history));
 });
 
 window.app = new Vue({
@@ -75,4 +72,4 @@ window.app = new Vue({
       this.$store.commit('SET_HISTORY', history);
   },
   store
-})
+});

@@ -1,5 +1,3 @@
-
-
 <template>
   <div class="col-lg-4 col-md-6 col-sm-12">
     <div class="shadow-lg">
@@ -79,6 +77,7 @@
         this.$http.post("http://pekamonitor.cba.pl/submit.php", query, {
           emulateJSON : true
         }).then((response)=>{
+            if(response.body.success.length > 0)
               this.message = response.body.success[0].content;
         });
       },
