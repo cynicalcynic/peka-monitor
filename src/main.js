@@ -53,7 +53,7 @@ const store = new Vuex.Store({
 });
 
 store.subscribe((mutation, state) => {
-  if(mutation.type === "SET_HISTORY" || mutation.type === "PUSH_TO_HISTORY")
+  if(mutation.type === "SET_HISTORY" || mutation.type === "PUSH_TO_HISTORY" || mutation.type === "CLEAR_HISTORY")
     localStorage.setItem('history', JSON.stringify(state.history));
   else
     localStorage.setItem('tags', JSON.stringify(state.selectedBollards));
